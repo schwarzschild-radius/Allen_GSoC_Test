@@ -1,15 +1,18 @@
-struct S{
-    virtual ~S();
+struct S {
     int b;
-    void temp(int a);
+    S(int a);
+    virtual ~S() = 0;
 };
 
-void S::temp(int a) {
+S::S(int a) {
+    b = 42;
     float arr[] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8};
     for (int i = 0; i < 8; i++) {
-        arr[i] = arr[i] * arr[i] / __builtin_sqrt(arr[i] + a);
+        float *temp = &arr[i];
+        arr[i] = *temp * *temp / __builtin_sqrtf(*temp + a);
     }
     this->b = arr[a % 8];
-    this->b = this->b - 42;
-    return;
+    b -= 42;
 }
+
+S *s;
