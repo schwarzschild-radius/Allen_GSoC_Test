@@ -1,17 +1,15 @@
-typedef struct{
-    int (**a)(...);
+struct S{
+    virtual ~S();
     int b;
-} __attribute__((packed)) S;
+    void temp(int a);
+};
 
-S *s = 0;
-
-void temp(S *s, int a) {
-    s = new S;
-    float arr[] = {0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f};
+void S::temp(int a) {
+    float arr[] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8};
     for (int i = 0; i < 8; i++) {
         arr[i] = arr[i] * arr[i] / __builtin_sqrt(arr[i] + a);
     }
-    s->b = arr[a % 8];
-    s->b = s->b - 42;
+    this->b = arr[a % 8];
+    this->b = this->b - 42;
     return;
 }
