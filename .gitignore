@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# binary files
+*.o
+
+# vscode folder
+.vscode/
