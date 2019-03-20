@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <array>
+#include "chi2.h"
 
 void print_result(
   const std::vector<std::array<float, 3>>& x,
@@ -74,9 +75,22 @@ int main() {
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span_m1 = duration_cast<duration<double>>(t2 - t1);
 
+  std::vector<float> chi2_2(size);
+  std::vector<ispc::float3> x_ispc(size), y_ispc(size);
+  for(size_t i = 0; i < size; i++){
+    x_ispc[i].v[0] = x[i][0];
+    x_ispc[i].v[1] = x[i][1];
+    x_ispc[i].v[2] = x[i][2];
+
+    y_ispc[i].v[0] = y[i][0];
+    y_ispc[i].v[1] = y[i][1];
+    y_ispc[i].v[2] = y[i][2];
+  }
+
   high_resolution_clock::time_point t3 = high_resolution_clock::now();
 
   // Insert here your chi2 calculation routine using SPMD
+  ispc::chi2_ispc(size, chi2_2.data(), x_ispc.data(), y_ispc.data(), m , q);
   // https://ispc.github.io/documentation.html
 
   high_resolution_clock::time_point t4 = high_resolution_clock::now();
@@ -84,6 +98,9 @@ int main() {
 
   // Print first results
   print_result(x, y, chi2, 20);
+  print_result(x, y, chi2_2, 20);
+
+  std::cout << "The values match? " << std::equal(chi2.begin(), chi2.end(), chi2_2.begin()) << "\n";
 
   std::cout << "Chi2 calculation #1 took " << time_span_m1.count()
             << " seconds" << std::endl
